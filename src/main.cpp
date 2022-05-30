@@ -3,6 +3,16 @@
 #include "../bindings/imgui_impl_glfw.h"
 #include "../bindings/imgui_impl_opengl3.h"
 
+#include "log.hpp"
+
+const char* getClipboardText(void* userData) {
+    return glfwGetClipboardString(static_cast<GLFWwindow*>(userData));
+}
+
+void setClipboardText(void* userData, const char* text) {
+    glfwSetClipboardString(static_cast<GLFWwindow*>(userData), text);
+}
+
 int main() {
     const int WIDTH = 800;
     const int HEIGHT = 600;
@@ -18,10 +28,15 @@ int main() {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
+    io.UserData = window;
+    io.GetClipboardTextFn = getClipboardText;
+    io.SetClipboardTextFn = setClipboardText;
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
     ImGui::StyleColorsDark();
+
+    Log log;
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
@@ -31,9 +46,9 @@ int main() {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-            ImGui::Begin("Test");
-                ImGui::Text("Hello world!");
-            ImGui::End();
+            ImGui::ShowDemoWindow();
+        
+            log.draw("Log");
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

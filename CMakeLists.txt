@@ -20,3 +20,7 @@ target_link_libraries(imlog
     imgui::imgui
     glfw::glfw
 )
+
+target_include_directories(imlog PUBLIC
+    include
+)
