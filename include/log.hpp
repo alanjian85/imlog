@@ -29,12 +29,14 @@ public:
 
             ImGui::Separator();
             ImGui::BeginChild("scrolling");
+            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 1));
                 if (copy) ImGui::LogToClipboard();
                 ImGui::TextUnformatted(m_Buffer.begin());
                 if (m_AutoScroll) {
                     ImGui::SetScrollHereY(1.0f);
                     m_AutoScroll = false;
                 }
+            ImGui::PopStyleVar();
             ImGui::EndChild();
         ImGui::End();
     }

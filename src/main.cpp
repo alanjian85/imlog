@@ -4,7 +4,7 @@
 #include "../bindings/imgui_impl_opengl3.h"
 #include <spdlog/spdlog.h>
 
-#include "log.hpp"
+#include "log_sink.hpp"
 
 const char* getClipboardText(void* userData) {
     return glfwGetClipboardString(static_cast<GLFWwindow*>(userData));
@@ -38,6 +38,10 @@ int main() {
     ImGui::StyleColorsDark();
 
     Log log;
+    auto logSink = std::make_shared<LogSink_st>(log);
+    spdlog::default_logger()->sinks().push_back(logSink);
+
+    spdlog::info("Hello world!");
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
@@ -48,7 +52,6 @@ int main() {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
             ImGui::ShowDemoWindow();
-        
             log.draw("Log");
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
