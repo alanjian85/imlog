@@ -2,6 +2,7 @@
 #include <imgui.h>
 #include "../bindings/imgui_impl_glfw.h"
 #include "../bindings/imgui_impl_opengl3.h"
+#include <spdlog/spdlog.h>
 
 #include "log.hpp"
 
