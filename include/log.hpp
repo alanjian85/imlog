@@ -18,8 +18,8 @@ public:
         m_Messages.clear();
     }
 
-    void addLog(Message message) {
-        m_Messages.push_back(std::move(message));
+    void addLog(Message msg) {
+        m_Messages.push_back(std::move(msg));
         m_AutoScroll = true;
     }
 
@@ -34,8 +34,8 @@ public:
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 1));
                 if (copy) ImGui::LogToClipboard();
                 
-                for (const auto& message : m_Messages) {
-                    ImGui::TextUnformatted(message.str.c_str());
+                for (const auto& msg : m_Messages) {
+                    ImGui::TextUnformatted(msg.str.c_str());
                 }
                 
                 if (m_AutoScroll) {
