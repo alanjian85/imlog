@@ -35,7 +35,9 @@ public:
                 if (copy) ImGui::LogToClipboard();
                 
                 for (const auto& msg : m_Messages) {
-                    ImGui::TextUnformatted(msg.str.c_str());
+                    ImGui::TextUnformatted(msg.head.c_str()); ImGui::SameLine();
+                    ImGui::TextColored(ImVec4(255, 0, 0, 255), msg.body.c_str()); ImGui::SameLine();
+                    ImGui::TextUnformatted(msg.foot.c_str());
                 }
                 
                 if (m_AutoScroll) {
