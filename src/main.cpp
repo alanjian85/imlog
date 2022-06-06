@@ -41,7 +41,10 @@ int main() {
     auto logSink = std::make_shared<LogSink_st>(log);
     spdlog::default_logger()->sinks().push_back(logSink);
 
-    spdlog::info("Hello world!");
+    spdlog::info("Info: Mes is god!");
+    spdlog::warn("Warning: Mes is god!");
+    spdlog::error("Error: Mes is god!");
+    spdlog::critical("Critical: Mes is god!");
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();

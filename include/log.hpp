@@ -2,6 +2,7 @@
 #define LOG_HPP
 
 #include <vector>
+#include <stdexcept>
 
 #include <imgui.h>
 
@@ -36,7 +37,7 @@ public:
                 
                 for (const auto& msg : m_Messages) {
                     ImGui::TextUnformatted(msg.head.c_str()); ImGui::SameLine();
-                    ImGui::TextColored(ImVec4(255, 0, 0, 255), msg.body.c_str()); ImGui::SameLine();
+                    ImGui::TextColored(getLevelColor(msg.level), msg.body.c_str()); ImGui::SameLine();
                     ImGui::TextUnformatted(msg.foot.c_str());
                 }
                 
@@ -48,6 +49,17 @@ public:
             ImGui::EndChild();
         ImGui::End();
     }
+private:
+    static ImVec4 getLevelColor(spdlog::level::level_enum level) {
+        switch (level) {
+            case spdlog::level::info:     return ImVec4(0, 255, 0, 255);
+            case spdlog::level::warn:     return ImVec4(255, 255, 0, 255);
+            case spdlog::level::err:      return ImVec4(255, 0, 0, 255);
+            case spdlog::level::critical: return ImVec4(255, 0, 255, 255);
+        }
+        throw std::invalid_argument("Invalid spdlog level argument!");
+    }
+
 private:
     std::vector<Message> m_Messages;
     bool m_AutoScroll;
