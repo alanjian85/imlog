@@ -5,6 +5,8 @@
 
 #include <imgui.h>
 
+#include "message.hpp"
+
 class Log {
 public:
     Log() {
@@ -13,11 +15,11 @@ public:
     }
 
     void clear() {
-        m_Buffer.clear();
+        m_Messages.clear();
     }
 
-    void addLog(const char* str) {
-        m_Buffer.append(str);
+    void addLog(Message message) {
+        m_Messages.push_back(std::move(message));
         m_AutoScroll = true;
     }
 
@@ -31,7 +33,11 @@ public:
             ImGui::BeginChild("scrolling");
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 1));
                 if (copy) ImGui::LogToClipboard();
-                ImGui::TextUnformatted(m_Buffer.begin());
+                
+                for (const auto& message : m_Messages) {
+                    ImGui::TextUnformatted(message.str.c_str());
+                }
+                
                 if (m_AutoScroll) {
                     ImGui::SetScrollHereY(1.0f);
                     m_AutoScroll = false;
@@ -41,7 +47,7 @@ public:
         ImGui::End();
     }
 private:
-    ImGuiTextBuffer m_Buffer;
+    std::vector<Message> m_Messages;
     bool m_AutoScroll;
 };
 
