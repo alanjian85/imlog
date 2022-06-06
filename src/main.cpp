@@ -29,6 +29,8 @@ int main() {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
+    io.Fonts->AddFontFromFileTTF("fonts/consola.ttf", 24.0f);
+    io.Fonts->AddFontDefault();
     io.UserData = window;
     io.GetClipboardTextFn = getClipboardText;
     io.SetClipboardTextFn = setClipboardText;
@@ -41,10 +43,10 @@ int main() {
     auto logSink = std::make_shared<LogSink_st>(log);
     spdlog::default_logger()->sinks().push_back(logSink);
 
-    spdlog::info("Info: Mes is god!");
-    spdlog::warn("Warning: Mes is god!");
-    spdlog::error("Error: Mes is god!");
-    spdlog::critical("Critical: Mes is god!");
+    spdlog::info("Info");
+    spdlog::warn("Warning");
+    spdlog::error("Error");
+    spdlog::critical("Critical");
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
@@ -55,6 +57,8 @@ int main() {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
             //ImGui::ShowDemoWindow();
+            ImGui::SetNextWindowPos(ImVec2(0, 0));
+            ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x, io.DisplaySize.y));
             log.draw("Log");
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
