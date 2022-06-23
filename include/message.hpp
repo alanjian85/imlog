@@ -1,18 +1,16 @@
 #ifndef MESSAGE_HPP
 #define MESSAGE_HPP
 
-#include <cstdlib>
 #include <string>
 
-#include <spdlog/common.h>
+#include <spdlog/spdlog.h>
 
 struct Message {
-    Message(const std::string& str_, std::size_t colorBegin_, std::size_t colorEnd_, 
-        spdlog::level::level_enum level_) {
-        head = str_.substr(0, colorBegin_);
-        body = str_.substr(colorBegin_, colorEnd_ - colorBegin_);
-        foot = str_.substr(colorEnd_);
-        level = level_;
+    Message(const std::string& str, const spdlog::details::log_msg& msg) {
+        head = str.substr(0, msg.color_range_start);
+        body = str.substr(msg.color_range_start, msg.color_range_end - msg.color_range_start);
+        foot = str.substr(msg.color_range_end);
+        level = msg.level;
     }
 
     std::string head;

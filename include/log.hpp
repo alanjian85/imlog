@@ -2,7 +2,6 @@
 #define LOG_HPP
 
 #include <vector>
-#include <stdexcept>
 
 #include <imgui.h>
 
@@ -10,18 +9,13 @@
 
 class Log {
 public:
-    Log() {
-        m_AutoScroll = true;
-        clear();
-    }
-
     void clear() {
-        m_Messages.clear();
+        messages.clear();
     }
-
-    void addLog(Message msg) {
-        m_Messages.push_back(std::move(msg));
-        m_AutoScroll = true;
+    
+    void addMessage(Message msg) {
+        messages.push_back(std::move(msg));
+        scroll = true;
     }
 
     void draw(const char* title, bool* open = nullptr) {
@@ -31,38 +25,37 @@ public:
             bool copy = ImGui::Button("Copy");
 
             ImGui::Separator();
-            ImGui::BeginChild("scrolling");
+            ImGui::BeginChild("scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 1));
                 if (copy) ImGui::LogToClipboard();
-                
-                for (const auto& msg : m_Messages) {
+
+                for (const auto& msg : messages) {
                     ImGui::TextUnformatted(msg.head.c_str()); ImGui::SameLine();
                     ImGui::TextColored(getLevelColor(msg.level), msg.body.c_str()); ImGui::SameLine();
                     ImGui::TextUnformatted(msg.foot.c_str());
                 }
-                
-                if (m_AutoScroll) {
+
+                if (scroll) {
                     ImGui::SetScrollHereY(1.0f);
-                    m_AutoScroll = false;
+                    scroll = false;
                 }
             ImGui::PopStyleVar();
             ImGui::EndChild();
         ImGui::End();
     }
-private:
+protected:
     static ImVec4 getLevelColor(spdlog::level::level_enum level) {
         switch (level) {
             case spdlog::level::info:     return ImVec4(0, 255, 0, 255);
             case spdlog::level::warn:     return ImVec4(255, 255, 0, 255);
             case spdlog::level::err:      return ImVec4(255, 0, 0, 255);
             case spdlog::level::critical: return ImVec4(255, 0, 255, 255);
+            default:                      return ImVec4(0, 0, 0, 255);
         }
-        throw std::invalid_argument("Invalid spdlog level argument!");
     }
-
 private:
-    std::vector<Message> m_Messages;
-    bool m_AutoScroll;
+    bool scroll = false;
+    std::vector<Message> messages;
 };
 
 #endif

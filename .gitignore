@@ -32,6 +32,5 @@
 *.app
 
 build
-bindings
 .vscode
 imgui.ini

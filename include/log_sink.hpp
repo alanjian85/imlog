@@ -8,21 +8,21 @@
 template <typename Mutex>
 class LogSink : public spdlog::sinks::base_sink<Mutex> {
 public:
-    LogSink(Log& log) : m_Log(log) {
+    LogSink(Log& log) : log(log) {
 
     }
 protected:
     void sink_it_(const spdlog::details::log_msg& msg) override {
         spdlog::memory_buf_t formatted;
         spdlog::sinks::base_sink<Mutex>::formatter_->format(msg, formatted);
-        m_Log.addLog(Message(fmt::to_string(formatted), msg.color_range_start, msg.color_range_end, msg.level));
+        log.addMessage(Message(fmt::to_string(formatted), msg));
     }
 
     void flush_() override {
         
     }
 private:
-    Log& m_Log;
+    Log& log;
 };
 
 #include <spdlog/details/null_mutex.h>
