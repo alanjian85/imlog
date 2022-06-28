@@ -385,7 +385,6 @@ private:
 		vkGetPhysicalDeviceProperties(device, &properties);
 		vkGetPhysicalDeviceFeatures(device, &features);
 
-
 		int score = 0;
 
 		if (properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU) {
@@ -402,8 +401,8 @@ private:
 			swapchainSuitable = !swapchainSupport.formats.empty() && !swapchainSupport.presentModes.empty();
 		}
 
-		if (!features.samplerAnisotropy || !extensionSupport || !features.geometryShader || 
-			!indices.isComplete() || !swapchainSuitable) {
+		if (!features.samplerAnisotropy || !features.sampleRateShading || !features.geometryShader || 
+			!indices.isComplete() || !swapchainSuitable || !extensionSupport) {
 			return 0;
 		}
 
@@ -502,6 +501,7 @@ private:
 
 		VkPhysicalDeviceFeatures features{};
 		features.samplerAnisotropy = VK_TRUE;
+		features.sampleRateShading = VK_TRUE;
 
 		VkDeviceCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -845,9 +845,9 @@ private:
 
 		VkPipelineMultisampleStateCreateInfo multisampleState{};
 		multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-		multisampleState.sampleShadingEnable = VK_FALSE;
+		multisampleState.sampleShadingEnable = VK_TRUE;
 		multisampleState.rasterizationSamples = msaaSamples;
-		multisampleState.minSampleShading = 1.0f;
+		multisampleState.minSampleShading = 0.2f;
 		multisampleState.pSampleMask = nullptr;
 		multisampleState.alphaToCoverageEnable = VK_FALSE;
 		multisampleState.alphaToOneEnable = VK_FALSE;
